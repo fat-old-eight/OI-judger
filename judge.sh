@@ -12,11 +12,11 @@ CPP="4747732939492939492394948384923949294"
 
 func() {
     echo "Usage:"
-    echo "judge.sh [-t TimeLimit] [-c Checker] [-s sources]"
+    echo "./judge.sh [-t TimeLimit] [-c Checker] [-s Source]"
     echo "Description:"
     echo "TimeLimit,unit second."
-    echo "Checker,the name of special judge."
-    echo "sources,the cpp you want to run."
+    echo "Checker,the cpp or binary file of special judge."
+    echo "Source,the cpp you want to run."
     exit -1
 }
  
@@ -39,12 +39,16 @@ do
     fi
 done
 if [ ! -e $CPP ];then
-    echo "not find sources."
+    echo "not find source."
     exit -1
 fi
 if [ ! -e $SPJ ];then
     if [ -e "$SPJ.cpp" ];then
         g++ "$SPJ.cpp" -o $SPJ -std=c++14 -Wall -O2 2>/dev/null
+        if [ $? -ne 0 ];then
+            echo "$(tput setaf 11)special judge CE."
+            exit -1
+        fi
     else
         echo "not find special judge."
         exit -1
