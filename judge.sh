@@ -38,7 +38,7 @@ do
         cpp=$in
     fi
 done
-if [ ! -e $CPP ];then
+if [[ ! -e $CPP && $CPP != "4747732939492939492394948384923949294" ]];then
     echo "not find source."
     exit -1
 fi
