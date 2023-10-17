@@ -11,7 +11,6 @@
 編輯指令和臨時工作目錄可以在腳本開頭自定義。
 ```
 Usage:
-Usage:
 ./judge.sh [-t TimeLimit] [-c Checker] [-s Source] [-g] [-f Freopen file]
 Description:
 TimeLimit, unit second.
