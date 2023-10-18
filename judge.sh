@@ -176,7 +176,9 @@ do
         ret=$?
         check "$ffile.in" "$ffile.out" "$ffile.ans" "$name"
         cd "$path" || Exit -1
-        cp "$dir/$ffile.out" "$out"
+        if [ -e "$dir/$ffile.out" ];then
+            cp "$dir/$ffile.out" "$out"
+        fi
         continue
     fi
     cp "$in" "$dir/$in"
