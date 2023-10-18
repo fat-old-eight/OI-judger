@@ -8,7 +8,7 @@
 
 部分操作會在 `/tmp` 文件夾裏面執行。
 
-編輯指令可以在腳本開頭自定義。
+編譯指令可以在腳本開頭自定義。
 ```
 Usage:
 ./judge.sh [-t TimeLimit] [-c Checker] [-s Source] [-g] [-f Freopen file]
