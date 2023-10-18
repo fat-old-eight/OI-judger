@@ -47,19 +47,19 @@ done
 check(){
     if [[ $ret == 124 ]];then
         echo -n "$(tput sgr0)TLE"
-        TLE=("${TLE[@]}" "$4")
+        TLE+=("$4")
     elif [[ $ret != 0 ]];then
         echo -n "$(tput setaf 5)RE"
-        RE=("${RE[@]}" "$4")
+        RE+=("$4")
     else
         if [ "$SPJ" != "./" ];then
             if ! "./$SPJ" "$1" "$2" "$3" ;then
-                WA=("${WA[@]}" "$4")
+                WA+=("$4")
             fi
         else
             if ! diff -ZB "$2" "$3" > /dev/null ;then
                 echo -n "$(tput setaf 1)WA"
-                WA=("${WA[@]}" "$4")
+                WA+=("$4")
             else
                 echo -n "$(tput setaf 2)AC"
             fi
@@ -86,6 +86,7 @@ if [[ -f "$dir" ]];then
     echo "$dir no fonud."
     Exit -1
 fi
+
 a=$(ls ./*.cpp 2>/dev/null)
 cnt=0
 for in in $a
@@ -135,22 +136,26 @@ if [[ $res != 0 ]];then
     echo  "$(tput setaf 11)CE"
     Exit -1
 fi
-fl=$(ls ./*.in 2>/dev/null)
-cnt=$(echo "$fl" | wc -w)
+fl=()
+while read -r t
+do
+    fl+=("$t")
+done < <(find ./*.in | sort)
+cnt=${#fl[*]}
 if [[ $cnt == 0 ]];then
     echo "no in/out/ans file here."
     Exit -1
 fi
 i=1
 cp "$tmp" "/$dir/$tmp"
-for in in $fl
+for ((i = 0; i < ${#fl[*]}; i++))
 do
+    in=${fl[i]}
     in=${in:2:${#in}}
     out=${in//.in/.out}
     ans=${in//.in/.ans}
     name=${in:0:$((${#in}-3))}
-    echo "${name}[$i/$cnt]:"
-    i=$((i+1))
+    echo "${name}[$(($i+1))/$cnt]:"
     if [ ! -e "$ans" ]
     then
         if [ ! -e "$out" ];then
@@ -184,7 +189,7 @@ do
     cp "$in" "$dir/$in"
     cp "$ans" "$dir/$ans"
     cd "$dir" || Exit -1
-    echo "./$tmp <$in >$out 2>/dev/null" >"$ba"
+    echo "./$tmp <\"$in\" >\"$out\" 2>/dev/null" >"$ba"
     chmod u+x "$ba"
     Time=$( TIMEFORMAT="%R"; time ( timeout "$TimeLimit" "$ba") 2>&1 )
     ret=$?
