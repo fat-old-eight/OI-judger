@@ -5,7 +5,6 @@ ulimit -s unlimited
 op="-std=c++14 -O2"
 gdbop="-std=c++14 -Og -g"
 spjop="-std=c++14 -O2"
-dir=".judgerdir"
 #########################
 TimeLimit=1
 SPJ="./"
@@ -15,8 +14,10 @@ TLE=()
 CPP="4747732939492939492394948384923949294"
 gdb=0
 fre=0
-rmdir=1
 ffile=""
+dir="/tmp"
+path=$(pwd)
+ba="$(mktemp)"
 #########################
 
 func() {
@@ -119,24 +120,13 @@ if [[ $? != 0 ]];then
     exit -1
 fi
 fl=$(ls *.in 2>/dev/null)
-cnt=0
-for in in $fl
-do
-    cnt=$(expr $cnt + 1);
-done
+cnt=$(echo $fl | wc -w)
 if [[ $cnt == 0 ]];then
     echo "no in/out/ans file here."
     exit -1
 fi
 i=1
-if [[ $fre == 1 ]];then
-    if [[ -d $dir ]];then
-        rmdir=0
-    else
-        mkdir $dir
-    fi
-    cp $tmp "$dir/$tmp"
-fi
+cp $tmp "/$dir/$tmp"
 for in in $fl
 do
     out=$(echo $in | sed "s/.in$/.out/")
@@ -161,27 +151,40 @@ do
         fi
     fi
     if [[ $fre == 1 ]];then
-        cp $in "./$dir/$ffile.in"
-        cp $ans "./$dir/$ffile.ans"
-        cd $dir
-        Time=$( TIMEFORMAT="%R"; time ( timeout $TimeLimit ./$tmp 2>/dev/null) 2>&1 )
+        cp $in "$dir/$ffile.in"
+        cp $ans "$dir/$ffile.ans"
+        cd "$dir"
+        echo "./$tmp 2>/dev/null" >$ba
+        chmod u+x $ba
+        Time=$( TIMEFORMAT="%R"; time ( timeout $TimeLimit "$ba") 2>&1 )
         ret=$?
         check "$ffile.in" "$ffile.out" "$ffile.ans" $name
-        cd ..
+        cd $path
+        cp "$dir/$ffile.out" $out
         continue
     fi
-    Time=$( TIMEFORMAT="%R"; time ( timeout $TimeLimit ./$tmp <$in >$out 2>/dev/null) 2>&1 )
+    cp $in "$dir/$in"
+    cp $ans "$dir/$ans"
+    cd "$dir"
+    echo "./$tmp <$in >$out 2>/dev/null" >$ba
+    chmod u+x $ba
+    Time=$( TIMEFORMAT="%R"; time ( timeout $TimeLimit "$ba") 2>&1 )
     ret=$?
     check $in $out $ans $name
+    cd $path
+    cp "$dir/$out" $out
+    rm "$dir/$in" -f
+    rm "$dir/$ans" -f
+    rm "$dir/$out" -f
 done
-if [[ $fre -eq 1 && $rmdir -eq 1 ]];then
-    rm "./$dir/$ffile.in"
-    rm "./$dir/$ffile.out"
-    rm "./$dir/$ffile.ans"
-    if [ $rmdir -eq 1 ];then
-        rm $dir -r
-    fi
+rm "$dir/$tmp" -f
+rm "$ba" -f
+if [[ $fre -eq 1 ]];then
+    rm "$dir/$ffile.in" -f
+    rm "$dir/$ffile.out" -f
+    rm "$dir/$ffile.ans" -f
 fi
+
 echo "$(tput setaf 5)RE on: ${RE[@]}"
 echo "$(tput setaf 1)WA on: ${WA[@]}"
 echo "$(tput sgr0)TLE on: ${TLE[@]}"

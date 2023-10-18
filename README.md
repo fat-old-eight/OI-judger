@@ -6,9 +6,9 @@
 
 會自動編譯 SPJ 和 Source 文件。
 
-使用 -f 時會新建臨時工作目錄。
+部分操作會在 `/tmp` 文件夾裏面執行。
 
-編輯指令和臨時工作目錄可以在腳本開頭自定義。
+編輯指令可以在腳本開頭自定義。
 ```
 Usage:
 ./judge.sh [-t TimeLimit] [-c Checker] [-s Source] [-g] [-f Freopen file]
@@ -26,4 +26,4 @@ Freopen file, the name of in/out/ans name(if ues freopen).
 
 歡迎 PR。（如果不介意如答辯一樣的代碼的話。）
 
-RE 有些許排版問題，正在修補。
+~~RE 有些許排版問題，正在修補。~~
