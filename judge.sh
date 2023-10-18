@@ -145,6 +145,7 @@ i=1
 cp "$tmp" "/$dir/$tmp"
 for in in $fl
 do
+    in=${in:2:${#in}}
     out=${in//.in/.out}
     ans=${in//.in/.ans}
     name=${in:0:$((${#in}-3))}
