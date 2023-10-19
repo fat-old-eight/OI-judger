@@ -18,6 +18,7 @@ ffile=""
 dir="/tmp"
 path=$(pwd)
 ba="$(mktemp)"
+data=""
 #########################
 
 func() {
@@ -32,7 +33,7 @@ func() {
     exit 0
 }
 
-while getopts 'ht:c:s:gf:' OPT; do
+while getopts 'ht:c:s:gf:d:' OPT; do
     case $OPT in
         t) TimeLimit="$OPTARG";;
         c) SPJ="$OPTARG";;
@@ -40,6 +41,7 @@ while getopts 'ht:c:s:gf:' OPT; do
         g) gdb=1;;
         f) fre=1;ffile="$OPTARG";;
         h) func;;
+        d) data="$OPTARG";;
         ?) func;;
     esac
 done
@@ -140,7 +142,7 @@ fl=()
 while read -r t
 do
     fl+=("$t")
-done < <(find ./*.in | sort)
+done < <(find . -maxdepth 1  -name "${data}*.in" | sort)
 cnt=${#fl[*]}
 if [[ $cnt == 0 ]];then
     echo "no in/out/ans file here."
