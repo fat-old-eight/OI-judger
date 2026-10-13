@@ -1,29 +1,21 @@
 # OI-judger
+已使用AI重構。
 一個本地評測的bash腳本。
-僅支持Linux。
+支持Linux與Windows，推薦在Linux下使用。
 ## 使用方式
 需將其放入工作目錄中。
 
 會自動編譯 SPJ 和 Source 文件。
 
-部分操作會在 `/tmp` 文件夾裏面執行。
-
-編譯指令可以在腳本開頭自定義。
 ```
 Usage:
-./judge.sh [-t TimeLimit] [-c Checker] [-s Source] [-g] [-f Freopen file]
+./judge.sh [-t TimeLimit] [-c Checker] [-s Source] [-g] [-f Freopen file] [-m MemoryLimit]
 Description:
 TimeLimit, unit second.
 Checker, the cpp or binary file of special judge.
 Source, the cpp you want to run.
 -g, generate debugging information at compile time.
 Freopen file, the name of in/out/ans name(if ues freopen).
+-m, memory limit in MB, 0 means unlimited. MLE detection is skipped
+    automatically on platforms where ulimit -v has no effect.
 ```
-## 注意
-現在不支持 subtest 和判斷 MLE。
-
-以及如果文件夾下有多個 cpp 文件，請指定 Source。
-
-歡迎 PR。（如果不介意如答辯一樣的代碼的話。）
-
-~~RE 有些許排版問題，正在修補。~~
